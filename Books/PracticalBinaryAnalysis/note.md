@@ -392,6 +392,146 @@
 
 ### 3.5 まとめ
 
+
+
+## 第4章 libbfdを使ってバイナリローダ―を作成する。
+
+
+### 4.0 概要
+- 本章では、バイナリファイルのパースと静的な読み込みを行うフレームワークの設計と実装を行う。
+
+### 4.1 libbfdとは何か
+- BFD(Binary File Descriptor, libbfd)は、バイナリフォーマットの読み取りとパースを行うための共通インターフェイスを提供するライブラリである。
+- libbfdをベースとしてバイナリローダーを作成すれば、フォーマットごとのサポートを全く実装する事なく、全てのフォーマットを自動的にサポート出来る。
+
+
+### 4.2 単純なバイナリ読み込みインターフェース
+
+- **4.2.1 概要**
+	- 動的ローダーは、バイナリをメモリに読み込んで実行する事にあるが、これから実装するインターフェースは静的な解析ツールで使用する事を目的としている。
+	```c++
+	// ヘッダファイルを作るとき、#ifndefと#endif、および記号定数を定義する#defineという擬似命令を使用する。
+	// このようにヘッダファイルに擬似命令を取り入れることにより、重複して定義される問題を回避することが出来る。
+	#ifndef LOADER_H
+	#define LOADER_H
+
+	#include <stdint.h>
+	#include <string>
+	#include <vector>
+
+	class Binary;
+	class Section;
+	class Symbol;
+
+	class Symbol {
+	public: 
+		
+		// ENUM型の定義
+		enum SymbolType{
+			SYM_TYPE_UKN 	= 	0,
+			SYM_TYPE_FUNC	= 	1,
+		};
+
+		// コンストラクタ
+		//		type(SYM_TYPE_UKN)は、typeが変数名で、()内がデフォルト値となる。
+		Symbol(): type(SYM_TYPE_UKN), name(), addr(0) {}
+
+		SymbolType	type;
+		std::string name;
+		utin64_t	addr;
+	}
+
+
+	class Section{
+	public:
+		enum SectionType {
+			SEC_TYPE_NONE = 0,
+			SEC_TYPE_CODE = 1,
+			SEC_TYPE_DATA = 2
+		}
+
+		Section(): binary(NULL), type(SEC_TYPE_NONE), vma(0), size(0), bytes(NULL) {}
+
+		bool contains(uint64_t addr){
+			return (addr >= vma) && (addr-vma < size);
+		}
+
+		Binary 		*binary;
+		std::string	name;
+		SectionType type;
+		uint64_t	vma;
+		uint64_t	size;
+		uint8_t		*bytes;
+	}
+
+	// バイナリ全体を抽象化するルートクラス
+	//		Sectionオブジェクトを要素とするvectorとSymbolオブジェクトからなるvectorが含まれている。
+	class Binary{
+	public:
+		enum BinaryType{
+			BIN_TYPE_AUTO = 0,
+			BIN_TYPE_ELF  = 1,
+			BIN_TYPE_PE	  = 2
+		};
+
+		enum BinaryArch{
+			ARCH_NONE	= 0,
+			ARCH_X86	= 1,
+		};
+
+		Binary(): type(BIN_TYPE_AUTO), arch(ARCH_NONE), bits(0), entry(0){}
+
+		Section *get_text_section(){
+			for(auto &s: sections){
+				if (s.name == ".text"){
+					return &s;
+				}
+			}
+			return NULL;
+		}
+
+		std::string		filename;
+		BinaryType		type;
+		std::string		type_str;
+		BinaryArch		arch;
+		std::string		arch_str;
+		unsigned		bits;
+		uint64_t		entry;
+		std::vector<Section> sections;
+		std::vector<Symbol> symbols;
+	};
+
+	// load_binary関数は、ファイル名からバイナリを読み込むための関数である。
+	int load_binary	(std::string &fname, Binary *bin, Binary::BinaryType type);
+	// unload_binary関数は、バイナリファイルを開放する関数である。
+	void unload_binary (Binary *bin)
+	
+	#endif
+	```
+
+- **4.2.2 Binaryクラス**
+
+- **4.2.3 Sectionクラス**
+
+### 4.3 バイナリローダ―を実装する
+
+- **4.3.1 libbfdを初期化してバイナリを開く**
+
+- **4.3.2 バイナリの基本的なプロパティをパースする**
+
+- **4.3.3 シンボルを読み込む**
+
+- **4.3.4 セクションを読み込む**
+
+### 4.4 バイナリローダーをテストする
+
+### 4.5 まとめ
+
+
+
+
+
+
 ## 自己調査
 
 
