@@ -441,17 +441,19 @@
 		utin64_t	addr;
 	}
 
-
+	// セクションの主なプロパティを定義している。
 	class Section{
 	public:
+		// セクションタイプ
 		enum SectionType {
 			SEC_TYPE_NONE = 0,
-			SEC_TYPE_CODE = 1,
-			SEC_TYPE_DATA = 2
+			SEC_TYPE_CODE = 1,	// コードが含まれているか
+			SEC_TYPE_DATA = 2	// データが含まれているか
 		}
 
 		Section(): binary(NULL), type(SEC_TYPE_NONE), vma(0), size(0), bytes(NULL) {}
 
+		// アドレスがセクションの一部かどうかを示す関数
 		bool contains(uint64_t addr){
 			return (addr >= vma) && (addr-vma < size);
 		}
@@ -468,10 +470,11 @@
 	//		Sectionオブジェクトを要素とするvectorとSymbolオブジェクトからなるvectorが含まれている。
 	class Binary{
 	public:
+		// 有効なバイナリタイプ
 		enum BinaryType{
-			BIN_TYPE_AUTO = 0,
-			BIN_TYPE_ELF  = 1,
-			BIN_TYPE_PE	  = 2
+			BIN_TYPE_AUTO = 0,	// Load_binaryに渡すと自動的に判別する。
+			BIN_TYPE_ELF  = 1,	// ELF
+			BIN_TYPE_PE	  = 2	// PE
 		};
 
 		enum BinaryArch{
@@ -481,6 +484,7 @@
 
 		Binary(): type(BIN_TYPE_AUTO), arch(ARCH_NONE), bits(0), entry(0){}
 
+		// .textセクションを自動的に調べて返す。
 		Section *get_text_section(){
 			for(auto &s: sections){
 				if (s.name == ".text"){
@@ -509,19 +513,31 @@
 	#endif
 	```
 
-- **4.2.2 Binaryクラス**
-
-- **4.2.3 Sectionクラス**
-
 ### 4.3 バイナリローダ―を実装する
+```c++
+// libbfdをインクルードする。
+#include <bfd.h>
+#include "loader.h"
 
-- **4.3.1 libbfdを初期化してバイナリを開く**
+// ファイル名で指定されたバイナリファイルをパースし、Binaryオブジェクトに読み込む。
+int load_binary(std::string &fname, Binary *bin, Binary::BinaryType type){
+	return load_binary_bfd(fname,  bin, type);
+}
 
-- **4.3.2 バイナリの基本的なプロパティをパースする**
+// Binaryオブジェクトの動的に確保されたコンポーネントを全てバイナリローダーが開放する。
+void unload_binary(Binary *bin){
+	size_t i;
+	Section *sec;
 
-- **4.3.3 シンボルを読み込む**
+	for(i = 0; i < bin->sections.size(); i++){
+		sec = &bin->sections[i];
 
-- **4.3.4 セクションを読み込む**
+		if (sec->bytes){
+			free(sec->bytes);
+		}
+	}
+}
+```
 
 ### 4.4 バイナリローダーをテストする
 
