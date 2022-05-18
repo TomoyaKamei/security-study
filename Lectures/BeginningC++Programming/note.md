@@ -44,6 +44,38 @@
 
 ## Section5. Structure of a C++ Program
 
+### Lecture37
+    - 識別子は、プログラマによって名づけられた名前で、キーワードとは異なる。
+    ```cpp
+    #include <iostream>
+
+    int main()
+    {
+        int favorite_num;
+
+        std::cout << "Enter your favorite number between 1 and 100: ";
+        std::cin >> favorite_num;
+        std:cout << "Your favorite number is" << favorite_num << std::endl;
+
+        return 0;
+    }
+    
+    ```
+
+### Lecture38
+    - プリプロセッサディレクティブは、#で始まるシンタックスである。
+    - プリプロセッサディレクティブは、プリプロセッサによって処理され、そのあとにコンパイラが起動する。
+    - プリプロセッサディレクティブの例としては、以下が挙げられる。
+        - e.g. #include, #if, #elif, #else, #endif, #ifdef, #ifndef, 
+
+### Lecture39
+    - C++におけるコメントは、//または/**/を使用出来る。
+
+### Lecture40
+    - main関数は二つのバージョンがある。
+        - int main() {return 0;}
+        - int main(int argc, char *argv[]){return 0;}
+
 ## Sectionx. xxxx
 ### Lecture999
     - xxx
