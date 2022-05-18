@@ -76,6 +76,11 @@
         - int main() {return 0;}
         - int main(int argc, char *argv[]){return 0;}
 
+### Lecture41
+    - 名前空間は、パッケージの識別子が重複しないように使用する。アクセスする時は、パッケージ名::識別子名を使用する。
+    - また代替案として、using namespace パッケージ名;を使用すると、アクセスする時はパッケージ名::使用する必要はない。
+    - using パッケージ名::識別子名も使用する事が出来る。
+
 ## Sectionx. xxxx
 ### Lecture999
     - xxx
