@@ -93,13 +93,32 @@
         ```
 
 ### Lecture45
-    - xxx
+    - 変数の宣言は、```変数の型 変数名;```となる。
+    - 変数の初期化は、```変数名 = リテラル``または```変数名 {リテラル}````となる。
     ```cpp
+    #include <iostream>
+
+    using namespace std;
+
+    int main(){
+        cout << "Enter the width of the room: "
+        int roomWidth {0};
+        cin >> roomWidth;
+
+        cout << "Enter the length of the room:"
+        int roomLength {0};
+        cin >> roomLength;
+
+        cout << "The area of the room is " << roomWidth * roomLength << " square feet" << endl;
+        return 0;
+    }
     
     ```
 
 ### Lecture46
-    - xxx
+    - {}内に書かれた変数は、ローカル変数と呼ばれる。
+    - {}外に書かれた変数は、グローバル変数と呼ばれて自動的に0で初期化される。
+    - グローバル変数はどこからでもアクセスが可能である。
     ```cpp
     
     ```
