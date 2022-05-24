@@ -81,6 +81,29 @@
     - また代替案として、using namespace パッケージ名;を使用すると、アクセスする時はパッケージ名::使用する必要はない。
     - using パッケージ名::識別子名も使用する事が出来る。
 
+### Lecture44
+    - スタックは上位から下位に向かって進む。
+    - 変数には、以下のように表現出来る。
+        - ```
+        type Variable struct{
+            Name    string
+            Size    int
+            Address int
+        }
+        ```
+
+### Lecture45
+    - xxx
+    ```cpp
+    
+    ```
+
+### Lecture46
+    - xxx
+    ```cpp
+    
+    ```
+
 ## Sectionx. xxxx
 ### Lecture999
     - xxx
