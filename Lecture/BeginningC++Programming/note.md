@@ -123,9 +123,12 @@
     
     ```
 
-## Sectionx. xxxx
-### Lecture999
-    - xxx
+### Lecture47
+    - charは8bit、char16_tは16bit、char32_tは32bit、wchar_tは64bitをサポートする。
     ```cpp
+    char middle_initial {'J'};
+
+    cout << "My middle initial is " << middle_initial << endl;
+
     
     ```
