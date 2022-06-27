@@ -395,3 +395,128 @@
         ```
     
     - **2.8.4 変更可能なコピーキャプチャ**
+
+## 第三章　クラス
+### 3.1 constメンバー関数とmutable
+    - **3.1.1  メンバー変数を変更する/しない関数**
+        - constメンバー変数とは、インスタンスがconstとなっていても呼び出すことができるメンバー関数のことを指す。
+        - ```
+        class クラス名{
+            public:
+                // costメンバー関数の宣言
+                戻り値 メンバー関数名(引数型 引数名, ....) const;
+        };
+
+        戻り値 メンバー関数名(引数型 引数名, ....) const{
+
+        }
+        ```
+     - **3.1.2  cost/非consttメンバー関数間のオーバーロード**
+        -  引数の型・数が異なる同名の関数を複数定義できる機能であるが、constメンバー関数かどうかでもオーバーロードすることが可能である。
+    
+    - **3.1.3 constメンバー関数でも書き込みを行いたい場合**
+        - メンバー変数にmutable指定をすることで、constメンバー関数からでも書き換える操作を実施できるようになる。
+        - ```c++
+        class heavy_class
+        {
+            int m_value;
+
+            mutable int m_cache;
+            mutable bool m_cache_valid;
+
+            public:
+                int generate() const;
+                void set(int value);
+                int get() const;
+        }
+
+        int heavy_class::generate() const{
+            std::cout << "とても重いデータ生成関数" << std::endl;
+            return m_value;
+        }
+
+        int heavy_class::get() const{
+            if (m_cache_valid) {return m_cache};
+
+            m_cache = generate();
+            m_cache_valid = true;
+
+            return m_cache;
+        }
+        ```
+
+### 3.2 コンストラクタとデストラクター
+- **3.2.1  コンストラクターとは**
+    - ```
+    #include <iostream>
+    #include <string>
+
+    class person{
+        std::string  m_name;
+        int                 m_age;
+
+        public:
+            person();
+
+            void set_name(std::string name);
+            void set_age(int age);
+
+            std::string  name() const;
+            int                 age() const;
+    };
+
+    person::person(): m_age(-1){
+        std::cout << "コンストラクタ呼び出し" << std::endl;
+    }
+
+    void person::set_name(std::string name){
+        m_name
+    }
+    ```
+
+    - **3.2.4 デストラクターとは**
+        - インスタンスを開放する時に使用し、使用したメモリ領域を開放するために使用する。
+        - ```cpp
+        class クラス名{
+            public:
+                ~クラス名();
+        }
+
+        クラス名::~クラス名(){
+            処理;
+        }
+        ```
+        - コンストラクタで必要なメモリ領域を確保して、デストラクタで開放することをRALL(Resource Acquistion Is Initialization)という。
+
+### 3.3 初期値を受け取るコンストラクター
+- **3.3.1 コンストラクターは複数用意できる**
+    - コンストラクターは複数用意することが可能であるが、引数を受け取らないデフォルトコンストラクターがなくなってしまう。
+
+- **3.3.2 委譲コンストラクター**
+    - コンストラクタが他のコンストラクターを呼ぶための仕組みを委譲コンストラクターと呼ぶ。
+    - ```cpp
+    class クラス名{
+        public:クラス名(parameters...);
+
+        ....
+    };
+    
+    // 委譲元コンストラクター: 委譲先コンストラクタという書き順となる。
+    クラス名::クラス名(parameters...): クラス名(引数){
+        ...
+    }
+    ```
+
+- **3.3.3 コピーコンストラクター**
+    - クラスをコピーする際に使用されるコピーコンストラクターが存在する。
+    - デフォルトのコピー操作では、ポインタのみのコピーとなるため、参照した状態となるためその操作を変更したい場合に使用する。
+    - ```cpp
+    class クラス名{
+        public: 
+            クラス名(const クラス名& 変数名);
+    }
+    
+    ```
+
+- **3.3.4 =を使用した初期化**
+- **3.3.5 explicitを使用したコンストラクタ**
